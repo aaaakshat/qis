@@ -15,7 +15,7 @@ import cv2
 
 # Fetch raw image data
 T = int(input("Enter # of frames T\n"))
-q = float(input("Enter cutoff q\n"))
+q = int(input("Enter cutoff q\n"))
 alpha = int(input("Enter alpha (gain)\n"))
 x = np.empty([3024,3024])
 x = cv2.imread("images/IMG_1.jpg", 0)/255
