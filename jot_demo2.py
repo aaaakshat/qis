@@ -40,7 +40,7 @@ def B(k, cutoff):
 b_vec = np.vectorize(B)
 
 for i in range (0, T):
-    y[i] = b_vec(y[i], 1)
+    y[i] = b_vec(y[i], q)
 
 y_mean = np.apply_along_axis(np.mean, 0, y)
 
@@ -53,6 +53,6 @@ plt.imshow(y[0], cmap="gray")
 plt.title("p(k) > {} for y[0]".format(q))
 plt.figure(3)
 plt.imshow(y_mean, cmap="gray")
-plt.title("average of y")
+plt.title("Simple Sum for {}".format(alpha))
 plt.show()
 
