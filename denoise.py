@@ -66,8 +66,10 @@ def inverse_anscombe(z):
     '''
     return (z/2.0)**2 - 3.0/8.0
 
+# Normalise values between 0 - 255
 y_mean = np.interp(y_mean, (y_mean.min(), y_mean.max()), (0, 255))
 y_mean = np.uint8(y_mean)
+
 y_mean_denoised = cv2.bilateralFilter(y_mean, d_a, d_b, d_c)
 
 t_before = anscombe(y_mean).astype(np.uint8)
