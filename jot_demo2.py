@@ -6,6 +6,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
+from bm3d import bm3d
+from ttictoc import tic, toc
 
 # Setup initial cubicles
 #
@@ -29,6 +31,46 @@ for i in range(0, T):
 
 y_raw = y[0]
 
+print("bottleneck")
+
+p = 1-(np.e**x)
+
+print(f"range of p max: {np.max(p)} x min: {np.min(p)}")
+print(np.isnan(p).any())
+print(np.max(p))
+print(np.any(p < 0))
+print(p)
+
+#tic()
+#y_af = np.random.binomial(10, p)
+#y_af = np.where(y_af<q, 0, 1)
+#print("Yaf: ", y_af.shape)
+#print(toc())
+
+
+tic()
+y = np.random.binomial(T,1-np.exp(-alpha*x))
+xhat  = bm3d(y/100, 0.04)*100
+plt.imshow(xhat,cmap='gray')
+plt.show()
+print("bm3d", toc())
+
+
+x_T = np.repeat(x[:, :, np.newaxis], 10, axis=2)
+print('x_t shape: ', x_T.shape)
+
+y_new = np.random.poisson(alpha*x_T)
+y_new = np.where(y_new<q, 0, 1)
+
+plt.show()
+
+plt.figure(1)
+plt.imshow(y_new[:,:,1], cmap='gray')
+y_new = np.apply_along_axis(np.sum, 0, y)
+print("ynew dim", y_new.shape)
+
+
+tic()
 # Define function to determine bit state
 def B(k, cutoff):
     if (k >= cutoff):
@@ -42,7 +84,10 @@ b_vec = np.vectorize(B)
 for i in range (0, T):
     y[i] = b_vec(y[i], q)
 
-y_mean = np.apply_along_axis(np.mean, 0, y)
+y_mean = np.apply_along_axis(np.sum, 0, y)
+
+print(toc())
+plt.show()
 
 # Plot and show
 plt.figure(1)
@@ -53,6 +98,7 @@ plt.imshow(y[0], cmap="gray")
 plt.title("p(k) > {} for y[0]".format(q))
 plt.figure(3)
 plt.imshow(y_mean, cmap="gray")
+print("dim: ", y_mean.shape)
 plt.title("Simple Sum for {}".format(alpha))
 plt.show()
 
